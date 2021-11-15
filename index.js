@@ -136,7 +136,9 @@ async function run() {
 
 run().catch(console.dir);
 
-
+app.get('/hello', (req, res) => {
+    res.send('Hello updated here');
+})
 
 app.get('/', (req, res) => {
     res.send('Hello Nobarun Camera Museum!')
