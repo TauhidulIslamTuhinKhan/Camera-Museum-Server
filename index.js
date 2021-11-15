@@ -26,6 +26,7 @@ async function run() {
         const productsCollection = database.collection("products");
         const bookingCollection = database.collection("bookingProducts");
         const usersCollection = database.collection("users");
+        const reviewsCollection = database.collection("reviews");
 
 
         // GET Products API
@@ -35,6 +36,14 @@ async function run() {
             res.send(products);
 
         })
+
+        // GET Reviews API
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewsCollection.find({});
+            const reviews = await cursor.toArray();
+            res.json(reviews);
+        })
+
 
         // GET Single Product
         app.get('/products/:id', async (req, res) => {
@@ -100,6 +109,21 @@ async function run() {
             const filter = { email: user.email };
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        })
+
+        // POST Reviews API
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
+            res.json(result);
+        })
+
+        // DELETE API
+        app.delete('/bookingProducts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookingCollection.deleteOne(query);
             res.json(result);
         })
 
